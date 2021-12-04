@@ -1,6 +1,7 @@
 import numpy as np
 from collections import defaultdict
 
+
 class MonteCarloTreeSearchNode():
 
     def __init__(self, state, parent=None, parent_action=None):
@@ -41,10 +42,8 @@ class MonteCarloTreeSearchNode():
         return self.is_game_over()
 
     def rollout(self):
-        current_rollout_state = self.state
 
         while not self.is_game_over():
-
             possible_moves = self.get_legal_actions()
 
             action = self.rollout_policy(possible_moves)
@@ -57,14 +56,12 @@ class MonteCarloTreeSearchNode():
         if self.parent:
             self.parent.backpropagate(result)
 
-
     def is_fully_expended(self):
-        return len(self._untried_actions)
+        return len(self._untried_actions) == 0
 
-    def best_child(self, c_param = 0.1):
-        choices_weights = []
-        for c in self.children:
-            choices_weights.append((c.q() / c.n()) + c_param * np.sqrt((2 * np.log(self.n()) / c.n())))
+    def best_child(self, c_param=0.1):
+
+        choices_weights = [( c.q() / c.n() ) + c_param * np.sqrt(( 2 * np.log(self.n()) / c.n() )) for c in self.children]
         return self.children[np.argmax(choices_weights)]
 
     def rollout_policy(self, possible_moves):
@@ -73,8 +70,10 @@ class MonteCarloTreeSearchNode():
     def _tree_policy(self):
 
         current_node = self
+
         while not current_node.is_terminal_node():
             if not current_node.is_fully_expended():
+                print("Ok")
                 return current_node.expand()
             else:
                 current_node = current_node.best_child()
@@ -98,8 +97,8 @@ class MonteCarloTreeSearchNode():
         current_state = self.state
         py, px = np.where(current_state == 0)
         for i in range(len(py)):
-            if current_state[py[i]][px[i]+1] == opponent:
-                x = px[i]+1
+            if current_state[py[i]][px[i] + 1] == opponent:
+                x = px[i] + 1
                 n = 0
                 while current_state[py[i]][x] == opponent:
                     x += 1
@@ -107,9 +106,9 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[py[i]][x] == player:
                     action = (0, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]+1][px[i]+1] == opponent:
-                x = px[i]+1
-                y = py[i]+1
+            if current_state[py[i] + 1][px[i] + 1] == opponent:
+                x = px[i] + 1
+                y = py[i] + 1
                 n = 0
                 while current_state[y][x] == opponent:
                     x += 1
@@ -118,8 +117,8 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[y][x] == player:
                     action = (1, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]+1][px[i]] == opponent:
-                y = py[i]+1
+            if current_state[py[i] + 1][px[i]] == opponent:
+                y = py[i] + 1
                 n = 0
                 while current_state[y][px[i]] == opponent:
                     y += 1
@@ -127,9 +126,9 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[y][px[i]] == player:
                     action = (2, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]+1][px[i]-1] == opponent:
-                y = py[i]-1
-                x = px[i]+1
+            if current_state[py[i] + 1][px[i] - 1] == opponent:
+                y = py[i] - 1
+                x = px[i] + 1
                 n = 0
                 while current_state[y][x] == opponent:
                     x -= 1
@@ -138,8 +137,8 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[y][x] == player:
                     action = (3, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]][px[i]-1] == opponent:
-                x = px[i]-1
+            if current_state[py[i]][px[i] - 1] == opponent:
+                x = px[i] - 1
                 n = 0
                 while current_state[py[i]][x] == opponent:
                     x -= 1
@@ -147,19 +146,19 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[py[i]][x] == player:
                     action = (4, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]-1][px[i]-1] == opponent:
-                x = px[i]-1
-                y = py[i]-1
+            if current_state[py[i] - 1][px[i] - 1] == opponent:
+                x = px[i] - 1
+                y = py[i] - 1
                 n = 0
-                while current_state[y,x] == opponent:
+                while current_state[y, x] == opponent:
                     x -= 1
                     y -= 1
                     n += 1
                 if n > 0 and current_state[y][x] == player:
                     action = (5, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]-1][px[i]] == opponent:
-                y = py[i]-1
+            if current_state[py[i] - 1][px[i]] == opponent:
+                y = py[i] - 1
                 n = 0
                 while current_state[y][px[i]] == opponent:
                     y -= 1
@@ -167,9 +166,9 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[y][px[i]] == player:
                     action = (6, n, px[i], py[i])
                     legal_actions.append(action)
-            if current_state[py[i]-1][px[i]+1] == opponent:
-                x = px[i]+1
-                y = py[i]-1
+            if current_state[py[i] - 1][px[i] + 1] == opponent:
+                x = px[i] + 1
+                y = py[i] - 1
                 n = 0
                 while current_state[y][x] == opponent:
                     x += 1
@@ -179,7 +178,6 @@ class MonteCarloTreeSearchNode():
                     action = (7, n, px[i], py[i])
                     legal_actions.append(action)
 
-        legal_actions = np.array(legal_actions)
         return legal_actions
 
     def is_game_over(self):
@@ -210,13 +208,17 @@ class MonteCarloTreeSearchNode():
 
         coord_x = action[2]
         coord_y = action[3]
+        n = action[1]
         current_state = self.state
+        directions = {0: (1, 0), 1: (1, 1), 2: (0, 1), 3: (-1, 1), 4: (-1, 0), 5: (-1, -1), 6: (0, -1), 7: (1, -1)}
+        opponent = 3 - self.player
 
         current_state[coord_y][coord_x] = self.player
-
+        xn, yn = directions[action[0]]
+        for i in range(n):
+            coord_x = coord_x + xn
+            coord_y = coord_y + yn
+            if current_state[coord_y][coord_x] == opponent:
+                current_state[coord_y][coord_x] == self.player
         self.state = current_state
         return self.state
-
-
-
-

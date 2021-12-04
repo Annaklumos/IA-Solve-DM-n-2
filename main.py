@@ -16,4 +16,6 @@ initial_state = np.array([[9, 9, 9, 9, 9, 9, 9, 9],
                           [9, 9, 9, 9, 9, 9, 9, 9]])
 
 
-main()
+root = MonteCarloTreeSearchNode(state = initial_state)
+selected_node = root.best_action()
+print(root.state)
