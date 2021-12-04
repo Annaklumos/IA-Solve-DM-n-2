@@ -5,30 +5,30 @@ from collections import defaultdict
 class MonteCarloTreeSearchNode():
 
     def __init__(self, state, parent=None, parent_action=None):
-        self.state = state
-        self.player = 1
-        self.parent = parent
-        self.parent_action = parent_action
-        self.children = []
-        self._number_of_visits = 0
-        self._results = defaultdict(int)
-        self._results[1] = 0
-        self._results[-1] = 0
+        self.state = state #état du plateau
+        self.player = 1 #joueur dont c'est le tour
+        self.parent = parent #noeud précédent, None pour r
+        self.parent_action = parent_action #action précédente
+        self.children = [] #liste des descendants 
+        self._number_of_visits = 0# nombre de visites du noeud 
+        self._results = defaultdict(int) #dictionnaire
+        self._results[1] = 0  #nombre de wins
+        self._results[-1] = 0 #nombre de looses
         self._untried_actions = self.untried_actions()
 
-    def untried_actions(self):
+    def untried_actions(self): #liste des actions à tester
         self._untried_actions = self.get_legal_actions()
         return self._untried_actions
 
-    def q(self):
+    def q(self): #renvoie la différence win-loose
         wins = self._results[1]
         loses = self._results[-1]
         return wins - loses
 
-    def n(self):
+    def n(self): #nombre de fois qu'un noeud est visité
         return self._number_of_visits
 
-    def expand(self):
+    def expand(self): # choisit une action parmi les possibles et renvoie le noeud créé
         self.player = 3 - self.player
         action = self._untried_actions.pop()
         next_state = self.move(action)
@@ -38,11 +38,10 @@ class MonteCarloTreeSearchNode():
         self.children.append(child_node)
         return child_node
 
-    def is_terminal_node(self):
+    def is_terminal_node(self): #teste si le noeud est une feuille
         return self.is_game_over()
 
-    def rollout(self):
-
+    def rollout(self): #continue de dérouler la partie
         while not self.is_game_over():
             possible_moves = self.get_legal_actions()
 
@@ -50,16 +49,16 @@ class MonteCarloTreeSearchNode():
             self.state = self.move(action)
         return self.game_result()
 
-    def backpropagate(self, result):
+    def backpropagate(self, result): 
         self._number_of_visits += 1
         self._results[result] += 1
         if self.parent:
             self.parent.backpropagate(result)
 
-    def is_fully_expended(self):
+    def is_fully_expended(self): #teste si toutes les actions ont été essayées
         return len(self._untried_actions) == 0
 
-    def best_child(self, c_param=0.1):
+    def best_child(self, c_param=0.1): #upper confidence bound
 
         choices_weights = [( c.q() / c.n() ) + c_param * np.sqrt(( 2 * np.log(self.n()) / c.n() )) for c in self.children]
         return self.children[np.argmax(choices_weights)]
@@ -188,7 +187,11 @@ class MonteCarloTreeSearchNode():
         else:
             legal_action = self.get_legal_actions()
             if np.size(legal_action) == 0:
-                return True
+                self.player = 3 - self.player
+                if np.size(legal_action) == 0:
+                    return True
+                else : 
+                    self.player = 3 - self.player
             else:
                 return False
 
