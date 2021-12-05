@@ -96,9 +96,11 @@ class MonteCarloTreeSearchNode():
 
         current_state = self.state
         py, px = np.where(current_state == 0)
+        print(py)
         if len(py) == 32:
             player = 1
             opponent = 2
+
         for i in range(len(py)):
             if current_state[py[i]][px[i] + 1] == opponent:
                 x = px[i] + 1
@@ -203,7 +205,7 @@ class MonteCarloTreeSearchNode():
     def game_result(self):
 
         player_case = np.count_nonzero(self.state == self.player)
-        opponent_case = np.count_nonzero(self.state == (self.player - 2))
+        opponent_case = np.count_nonzero(self.state == (3 - self.player)) #modif compte
 
         if player_case > opponent_case:
             return 1
