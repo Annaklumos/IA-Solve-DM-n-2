@@ -6,7 +6,7 @@ class MonteCarloTreeSearchNode():
 
     def __init__(self, state, parent=None, parent_action=None):
         self.state = state #état du plateau
-        self.player = 1 #joueur dont c'est le tour
+        self.player = 2 #joueur dont c'est le tour
         self.parent = parent #noeud précédent, None pour r
         self.parent_action = parent_action #action précédente
         self.children = [] #liste des descendants 
@@ -23,7 +23,7 @@ class MonteCarloTreeSearchNode():
     def q(self): #renvoie la différence win-loose
         wins = self._results[1]
         loses = self._results[-1]
-        return wins - loses
+        return wins - loses 
 
     def n(self): #nombre de fois qu'un noeud est visité
         return self._number_of_visits
@@ -80,7 +80,7 @@ class MonteCarloTreeSearchNode():
         return current_node
 
     def best_action(self):
-        simulation_no = 100
+        simulation_no = 5
 
         for i in range(simulation_no):
             v = self._tree_policy()
@@ -96,6 +96,9 @@ class MonteCarloTreeSearchNode():
 
         current_state = self.state
         py, px = np.where(current_state == 0)
+        if len(py) == 32:
+            player = 1
+            opponent = 2
         for i in range(len(py)):
             if current_state[py[i]][px[i] + 1] == opponent:
                 x = px[i] + 1
@@ -177,7 +180,8 @@ class MonteCarloTreeSearchNode():
                 if n > 0 and current_state[y][x] == player:
                     action = (7, n, px[i], py[i])
                     legal_actions.append(action)
-
+        print("player", player)
+        print("legal_actions",legal_actions)
         return legal_actions
 
     def is_game_over(self):
