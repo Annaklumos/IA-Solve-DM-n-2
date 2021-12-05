@@ -47,6 +47,7 @@ class MonteCarloTreeSearchNode():
 
             action = self.rollout_policy(possible_moves)
             self.state = self.move(action)
+            self.player = 3 - self.player # modif ici!
         return self.game_result()
 
     def backpropagate(self, result): 
@@ -189,7 +190,7 @@ class MonteCarloTreeSearchNode():
             if np.size(legal_action) == 0:
                 self.player = 3 - self.player
                 if np.size(legal_action) == 0:
-                    return True
+                    return True #modif ici!
                 else : 
                     self.player = 3 - self.player
             else:
@@ -208,9 +209,8 @@ class MonteCarloTreeSearchNode():
             return 0
 
     def move(self, action):
-
         coord_x = action[2]
-        coord_y = action[3]
+        coord_y = action[3] # (7, n, px[i], py[i])
         n = action[1]
         current_state = self.state
         directions = {0: (1, 0), 1: (1, 1), 2: (0, 1), 3: (-1, 1), 4: (-1, 0), 5: (-1, -1), 6: (0, -1), 7: (1, -1)}
@@ -222,6 +222,7 @@ class MonteCarloTreeSearchNode():
             coord_x = coord_x + xn
             coord_y = coord_y + yn
             if current_state[coord_y][coord_x] == opponent:
-                current_state[coord_y][coord_x] == self.player
+                current_state[coord_y][coord_x] = self.player
         self.state = current_state
+        print(self.state)
         return self.state
