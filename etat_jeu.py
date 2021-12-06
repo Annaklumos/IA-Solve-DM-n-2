@@ -98,7 +98,7 @@ class State:
                 if n > 0 and current_state[y][x] == player:
                     action = (7, n, px[i], py[i])
                     legal_actions.append(action)
-        if len(legal_actions) == 0:
+        return legal_actions
 
 
     def is_game_over(self):
