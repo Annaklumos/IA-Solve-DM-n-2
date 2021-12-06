@@ -33,7 +33,7 @@ class MonteCarloTreeSearchNode:
 
     def expand(self):  # choisit une action parmi les possibles et renvoie le noeud créé
         action = self._untried_actions.pop()
-        next_state = self.state.get_legal_actions()
+        next_state = self.state.move(action)
         child_node = MonteCarloTreeSearchNode(
             next_state, parent=self, parent_action=action, c_param=self.c_param, simulation_no=self.simulation_no)
 
@@ -91,3 +91,4 @@ class MonteCarloTreeSearchNode:
             v.backpropagate(reward)
 
         return self.best_child(self.c_param)
+

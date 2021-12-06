@@ -13,7 +13,6 @@ class State:
 
         current_state = self.state
         py, px = np.where(current_state == 0)
-        print(px, py)
         if len(py) == 32:
             player = 1
             opponent = 2
