@@ -98,7 +98,8 @@ class State:
                 if n > 0 and current_state[y][x] == player:
                     action = (7, n, px[i], py[i])
                     legal_actions.append(action)
-        return legal_actions
+        if len(legal_actions) == 0:
+
 
     def is_game_over(self):
 
@@ -119,8 +120,8 @@ class State:
     def game_result(self):
 
         player_1 = np.count_nonzero(self.state == self.player)
-        player_2 = np.count_nonzero(self.state == (3 - self.player))
-
+        player_2 = np.count_nonzero(self.state.state == (3 - self.player))
+        print(player_2)
         if player_1 > player_2:
             return 1
         elif player_1 < player_2:
@@ -144,6 +145,8 @@ class State:
             if current_state[coord_y][coord_x] == opponent:
                 current_state[coord_y][coord_x] = self.player
         self.state = current_state
+
         self.player = 3 - self.player
+
         return self.state
 

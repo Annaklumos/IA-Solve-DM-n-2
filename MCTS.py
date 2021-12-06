@@ -89,6 +89,7 @@ class MonteCarloTreeSearchNode:
             v = self._tree_policy()
             reward = v.rollout()
             v.backpropagate(reward)
+            print(self.state.state)
 
         return self.best_child(self.c_param)
 
