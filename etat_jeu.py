@@ -118,8 +118,8 @@ class State:
 
     def game_result(self):
 
-        player_1 = np.count_nonzero(self.state == self.player_best_action)
-        player_2 = np.count_nonzero(self.state == self.player)
+        player_1 = np.count_nonzero(self.state == self.player)
+        player_2 = np.count_nonzero(self.state == (3 - self.player))
 
         if player_1 > player_2:
             return 1

@@ -38,14 +38,14 @@ class MonteCarloTreeSearchNode:
             next_state, parent=self, parent_action=action, c_param=self.c_param, simulation_no=self.simulation_no)
 
         self.children.append(child_node)
-        print("Extension ok")
+
         return child_node
 
     def is_terminal_node(self):  # teste si le noeud est une feuille
         return self.state.is_game_over()
 
     def rollout(self):  # continue de dérouler la partie
-        current_rollout_state = self.state
+        current_rollout_state = State(first_state=self.state)
 
         while not current_rollout_state.is_game_over():
             possible_moves = current_rollout_state.get_legal_actions()
