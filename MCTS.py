@@ -9,7 +9,6 @@ class MonteCarloTreeSearchNode:
         self.state = State(first_state=state)  # état du plateau
         self.c_param = c_param
         self.simulation_no = simulation_no
-        self.player = 2  # joueur dont c'est le tour
         self.parent = parent  # noeud précédent, None pour r
         self.parent_action = parent_action  # action précédente
         self.children = []  # liste des descendants
@@ -65,6 +64,7 @@ class MonteCarloTreeSearchNode:
 
     def best_child(self, c_param=0.1):  # upper confidence bound
 
+        print(self.children)
         choices_weights = [(c.q() / c.n()) + c_param * np.sqrt((2 * np.log(self.n()) / c.n())) for c in self.children]
         return self.children[np.argmax(choices_weights)]
 
@@ -89,7 +89,6 @@ class MonteCarloTreeSearchNode:
             v = self._tree_policy()
             reward = v.rollout()
             v.backpropagate(reward)
-            print(self.state.state)
 
         return self.best_child(self.c_param)
 
