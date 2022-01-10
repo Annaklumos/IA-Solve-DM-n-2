@@ -11,7 +11,7 @@ def main():
 
 
 reward_list_cparam = []
-for i in range(1,2):
+for i in range(1,101):
 
     initial_state = np.array([[9, 9, 9, 9, 9, 9, 9, 9],
                               [9, 0, 0, 0, 0, 0, 0, 9],
@@ -29,7 +29,7 @@ for i in range(1,2):
 print("Reward list of c_param : ", reward_list_cparam)
 
 reward_list_simu = []
-for i in range(1, 2):
+for i in range(1, 101):
     initial_state = np.array([[9, 9, 9, 9, 9, 9, 9, 9],
                               [9, 0, 0, 0, 0, 0, 0, 9],
                               [9, 0, 0, 0, 0, 0, 0, 9],
