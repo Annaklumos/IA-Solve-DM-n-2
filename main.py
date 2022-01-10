@@ -1,5 +1,6 @@
 from MCTS import MonteCarloTreeSearchNode
 import numpy as np
+import matplotlib.pyplot as plt
 
 def main():
     root = MonteCarloTreeSearchNode(state = initial_state, c_param=5, simulation_no=100)
@@ -11,6 +12,7 @@ def main():
 
 
 reward_list_cparam = []
+
 for i in range(1,101):
 
     initial_state = np.array([[9, 9, 9, 9, 9, 9, 9, 9],
@@ -29,7 +31,9 @@ for i in range(1,101):
 print("Reward list of c_param : ", reward_list_cparam)
 
 reward_list_simu = []
+
 for i in range(1, 101):
+
     initial_state = np.array([[9, 9, 9, 9, 9, 9, 9, 9],
                               [9, 0, 0, 0, 0, 0, 0, 9],
                               [9, 0, 0, 0, 0, 0, 0, 9],

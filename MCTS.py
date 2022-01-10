@@ -64,7 +64,6 @@ class MonteCarloTreeSearchNode:
 
     def best_child(self, c_param=0.1):  # upper confidence bound
 
-        print(self.children)
         choices_weights = [(c.q() / c.n()) + c_param * np.sqrt((2 * np.log(self.n()) / c.n())) for c in self.children]
         return self.children[np.argmax(choices_weights)]
 

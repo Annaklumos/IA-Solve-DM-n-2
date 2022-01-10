@@ -3,6 +3,7 @@ import numpy as np
 class State:
     def __init__(self, first_state):
         self.plateau = first_state
+        #print("nouveau noeud",self.plateau)
         self.player = 1
         self.player_best_action = 1
 
