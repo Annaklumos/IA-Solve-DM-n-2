@@ -1,3 +1,4 @@
+import inspect
 import numpy as np
 from collections import defaultdict
 from etat_jeu import State
@@ -33,7 +34,7 @@ class MonteCarloTreeSearchNode:
 
     def expand(self):  # choisit une action parmi les possibles et renvoie le noeud créé
         action = self._untried_actions.pop()
-        next_state = self.state.move(action)
+        next_state = self.state.move(action).plateau
         child_node = MonteCarloTreeSearchNode(
             next_state, parent=self, parent_action=action, c_param=self.c_param, simulation_no=self.simulation_no)
 
@@ -44,12 +45,10 @@ class MonteCarloTreeSearchNode:
     def is_terminal_node(self):  # teste si le noeud est une feuille
         return self.state.is_game_over()
 
-    def rollout(self):  # continue de dérouler la partie
-        current_rollout_state = State(first_state=self.state)
-
+    def rollout(self):  # continue de dérouler la partie     
+        current_rollout_state = State(self.state.plateau)
         while not current_rollout_state.is_game_over():
             possible_moves = current_rollout_state.get_legal_actions()
-
             action = self.rollout_policy(possible_moves)
             current_rollout_state = current_rollout_state.move(action)
         return current_rollout_state.game_result()
@@ -89,7 +88,6 @@ class MonteCarloTreeSearchNode:
             v = self._tree_policy()
             reward = v.rollout()
             v.backpropagate(reward)
-            print(self.state.state)
 
         return self.best_child(self.c_param)
 
