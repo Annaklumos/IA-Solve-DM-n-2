@@ -2,9 +2,10 @@ import inspect
 import numpy as np
 
 class State:
-    def __init__(self, first_state):
+    def __init__(self, first_state, player = 1):
         self.plateau = first_state
-        self.player = 1
+        print("nouveau noeud",self.plateau)
+        self.player = player
         self.player_best_action = 1
 
     def get_legal_actions(self):
@@ -12,7 +13,6 @@ class State:
         opponent = (3 - player)
         legal_actions = []
         current_state = self.plateau
-        print(self.plateau)
         py, px = np.where(current_state == 0)
         if len(py) == 32:
             player = 1
@@ -106,7 +106,6 @@ class State:
 
         empty_case = np.where(self.plateau == 0)
         if np.size(empty_case) == 0:
-            print(self.plateau)
             return True
         else:
             legal_action = self.get_legal_actions()

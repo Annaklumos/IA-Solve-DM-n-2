@@ -45,8 +45,9 @@ class MonteCarloTreeSearchNode:
     def is_terminal_node(self):  # teste si le noeud est une feuille
         return self.state.is_game_over()
 
-    def rollout(self):  # continue de dérouler la partie     
-        current_rollout_state = State(self.state.plateau)
+    def rollout(self):  # continue de dérouler la partie   
+        to_play= 3-self.state.player  
+        current_rollout_state = State(self.state.plateau, player = to_play)
         while not current_rollout_state.is_game_over():
             possible_moves = current_rollout_state.get_legal_actions()
             action = self.rollout_policy(possible_moves)
