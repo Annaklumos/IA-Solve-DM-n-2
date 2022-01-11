@@ -6,18 +6,15 @@ from etat_jeu import State
 
 class MonteCarloTreeSearchNode:
 
-    def __init__(self, state, c_param=0.1, simulation_no=100, parent=None, parent_action=None):
+    def __init__(self, state, c_param, simulation_no, parent=None, parent_action=None):
         self.state = State(first_state=state)  # état du plateau
         self.c_param = c_param
         self.simulation_no = simulation_no
-        self.player = 2  # joueur dont c'est le tour
         self.parent = parent  # noeud précédent, None pour r
         self.parent_action = parent_action  # action précédente
         self.children = []  # liste des descendants
         self._number_of_visits = 0  # nombre de visites du noeud
-        self._results = defaultdict(int)  # dictionnaire
-        self._results[1] = 0  # nombre de wins
-        self._results[-1] = 0  # nombre de looses
+        self._results = {1 : 0, 0 : 0, -1 : 0}  # dictionnaire nulles wins loses
         self._untried_actions = self.untried_actions()
 
     def untried_actions(self):  # liste des actions à tester
@@ -47,7 +44,8 @@ class MonteCarloTreeSearchNode:
 
     def rollout(self):  # continue de dérouler la partie   
         to_play= 3-self.state.player  
-        current_rollout_state = State(self.state.plateau, player = to_play)
+        current_rollout_state = self.state
+        self.state.player = to_play
         while not current_rollout_state.is_game_over():
             possible_moves = current_rollout_state.get_legal_actions()
             action = self.rollout_policy(possible_moves)
@@ -63,7 +61,7 @@ class MonteCarloTreeSearchNode:
     def is_fully_expended(self):  # teste si toutes les actions ont été essayées
         return len(self._untried_actions) == 0
 
-    def best_child(self, c_param=0.1):  # upper confidence bound
+    def best_child(self, c_param):  # upper confidence bound
 
         choices_weights = [(c.q() / c.n()) + c_param * np.sqrt((2 * np.log(self.n()) / c.n())) for c in self.children]
         return self.children[np.argmax(choices_weights)]
@@ -74,21 +72,28 @@ class MonteCarloTreeSearchNode:
     def _tree_policy(self):
 
         current_node = self
-
         while not current_node.is_terminal_node():
             if not current_node.is_fully_expended():
                 return current_node.expand()
             else:
-                current_node = current_node.best_child()
+                current_node = current_node.best_child(c_param = self.c_param)
         return current_node
 
     def best_action(self):
         simulation_no = self.simulation_no
-
         for i in range(simulation_no):
+            i_s = np.array([[9, 9, 9, 9, 9, 9, 9, 9],
+                              [9, 0, 0, 0, 0, 0, 0, 9],
+                              [9, 0, 0, 0, 0, 0, 0, 9],
+                              [9, 0, 0, 1, 2, 0, 0, 9],
+                              [9, 0, 0, 2, 1, 0, 0, 9],
+                              [9, 0, 0, 0, 0, 0, 0, 9],
+                              [9, 0, 0, 0, 0, 0, 0, 9],
+                              [9, 9, 9, 9, 9, 9, 9, 9]])            
+            self.state.plateau = i_s
             v = self._tree_policy()
             reward = v.rollout()
             v.backpropagate(reward)
 
-        return self.best_child(self.c_param)
+        return self.best_child(c_param = self.c_param)
 

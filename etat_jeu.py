@@ -4,9 +4,7 @@ import numpy as np
 class State:
     def __init__(self, first_state, player = 1):
         self.plateau = first_state
-        #print("nouveau noeud",self.plateau)
         self.player = player
-        self.player_best_action = 1
 
     def get_legal_actions(self):
         player = self.player
@@ -113,7 +111,7 @@ class State:
                 self.player = 3 - self.player
                 legal_action = self.get_legal_actions()
                 if np.size(legal_action) == 0:
-                    return True #modif ici!
+                    return True 
                 else :
                     return False
             else:
@@ -121,8 +119,8 @@ class State:
 
     def game_result(self):
 
-        player_1 = np.count_nonzero(self.plateau == self.player)
-        player_2 = np.count_nonzero(self.plateau == (3 - self.player))
+        player_1 = np.count_nonzero(self.plateau == 1)
+        player_2 = np.count_nonzero(self.plateau == 2)
         if player_1 > player_2:
             return 1
         elif player_1 < player_2:
@@ -148,6 +146,5 @@ class State:
         self.plateau = current_state
 
         self.player = 3 - self.player
-
         return self
 
